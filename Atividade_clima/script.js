@@ -20,21 +20,52 @@ const indElement = document.querySelector("#uv-index");
 
 const weatherContainer = document.querySelector("#weather-result");
 
+const errorMessageContainer = document.querySelector("#error-message");
+
+const loader = document.querySelector("#loader");
+
 //FUNÇÕES
 
+const toggleLoader = () => {
+  loader.classList.toggle("hidden");
+};
+
 const getWeatherData = async(city) => {
+    toggleLoader();
 
     const apiweatherURL = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=no&lang=pt`;
 
     const res = await fetch(apiweatherURL);
     const data = await res.json();
 
+    toggleLoader();
+
     return data;
-    //console.log(data); => testar e ver o nome das variáveis para exibi-lás
+    //console.log(data); //=> testar e ver o nome das variáveis para exibi-lás
+};
+
+//MENSAGEM DE ERRO
+
+const showErrorMessage = () => {
+  errorMessageContainer.classList.remove("hidden");
+};
+
+const hideInformation = () => {
+  errorMessageContainer.classList.add("hidden");
+  weatherContainer.classList.add("hidden");
+
 };
 
 const showWeatherData = async (city) => {
+
+    hideInformation();
+
     const data = await getWeatherData(city);
+
+     if (data.error) {
+        showErrorMessage();
+        return;
+  }
 
     cityElement.innerText = `${data.location.name}, ${data.location.country}`;
     localTimeElement.innerText = data.location.localtime;
@@ -59,3 +90,10 @@ searchBtn.addEventListener("click", (e) =>{
     showWeatherData(city);
 });
 
+cityInput.addEventListener("keyup", (e) => {
+    if(e.code === "Enter"){
+        const city = e.target.value;
+
+        showWeatherData(city);
+    }
+});
