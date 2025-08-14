@@ -22,23 +22,14 @@ const weatherContainer = document.querySelector("#weather-result");
 
 const errorMessageContainer = document.querySelector("#error-message");
 
-const loader = document.querySelector("#loader");
-
 //FUNÇÕES
 
-const toggleLoader = () => {
-  loader.classList.toggle("hidden");
-};
-
 const getWeatherData = async(city) => {
-    toggleLoader();
 
     const apiweatherURL = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=no&lang=pt`;
 
     const res = await fetch(apiweatherURL);
     const data = await res.json();
-
-    toggleLoader();
 
     return data;
     //console.log(data); //=> testar e ver o nome das variáveis para exibi-lás
@@ -97,3 +88,4 @@ cityInput.addEventListener("keyup", (e) => {
         showWeatherData(city);
     }
 });
+
